@@ -58,6 +58,8 @@ export default function Hero() {
     const mark = () => { try { localStorage.setItem(KEY, "1"); } catch {} };   // remembered across visits
     const ended = () => { done.current = true; mark(); setOn(false); setBlocked(false); };
     v.addEventListener("playing", mark, { once: true });
+    const retry = () => { if (!done.current && v.paused && visible.current) play(); };   // first visit: make sure it really starts
+    v.addEventListener("loadeddata", retry); v.addEventListener("canplay", retry);
     v.addEventListener("ended", ended);
     const io = new IntersectionObserver(([e]) => {
       visible.current = e.intersectionRatio >= 0.35;
@@ -67,13 +69,13 @@ export default function Hero() {
     const unlock = (e: Event) => {
       if (done.current) return;
       if ((e.target as Element | null)?.closest?.("[data-snd]")) return;
-      if (wantSound.current && v.muted) { v.muted = false; if (visible.current) play(); setBlocked(false); }
+      if (wantSound.current && (v.muted || v.paused)) { v.muted = false; if (visible.current) play(); setBlocked(false); }
       ["pointerdown", "keydown", "touchend"].forEach((t) => removeEventListener(t, unlock));
     };
     ["pointerdown", "keydown", "touchend"].forEach((t) => addEventListener(t, unlock, { passive: true }));
     const vis = () => { if (document.hidden) v.pause(); else if (visible.current) play(); };
     document.addEventListener("visibilitychange", vis);
-    return () => { io.disconnect(); document.removeEventListener("visibilitychange", vis); v.removeEventListener("ended", ended);
+    return () => { io.disconnect(); document.removeEventListener("visibilitychange", vis); v.removeEventListener("ended", ended); v.removeEventListener("loadeddata", retry); v.removeEventListener("canplay", retry);
       ["pointerdown", "keydown", "touchend"].forEach((t) => removeEventListener(t, unlock)); };
   }, [play]);
 
