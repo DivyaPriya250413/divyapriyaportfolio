@@ -40,22 +40,32 @@ export default function Hero() {
   const [blocked, setBlocked] = useState(false);
   const visible = useRef(true);
   const wantSound = useRef(true);
+  const done = useRef(false);            // intro already played (this visit or an earlier one) -> never auto-restart
+  const KEY = "hero-intro-played";
 
   const play = useCallback(async () => {
-    const v = vid.current; if (!v) return;
+    const v = vid.current; if (!v || done.current) return;
     try { await v.play(); setOn(!v.muted); setBlocked(v.muted && wantSound.current); }
     catch { v.muted = true; setOn(false); try { await v.play(); } catch {} setBlocked(wantSound.current); }
   }, []);
 
   useEffect(() => {
     const v = vid.current, h = ref.current; if (!v || !h) return;
-    v.muted = false; v.volume = 1; play();
+    try { done.current = localStorage.getItem(KEY) === "1"; } catch {}
+    const rest = () => { try { v.currentTime = 0.01; } catch {} };   // show the standing pose, paused
+    if (done.current) { v.muted = true; v.preload = "auto"; v.addEventListener("loadedmetadata", rest, { once: true }); if (v.readyState >= 1) rest(); }
+    else { v.muted = false; v.volume = 1; play(); }
+    const mark = () => { try { localStorage.setItem(KEY, "1"); } catch {} };   // remembered across visits
+    const ended = () => { done.current = true; mark(); setOn(false); setBlocked(false); };
+    v.addEventListener("playing", mark, { once: true });
+    v.addEventListener("ended", ended);
     const io = new IntersectionObserver(([e]) => {
       visible.current = e.intersectionRatio >= 0.35;
-      if (visible.current) play(); else v.pause();
+      if (visible.current) play(); else v.pause();   // pause (not reset) when scrolled away; resumes from the same spot
     }, { threshold: [0, 0.35, 0.5, 1] });
     io.observe(h);
     const unlock = (e: Event) => {
+      if (done.current) return;
       if ((e.target as Element | null)?.closest?.("[data-snd]")) return;
       if (wantSound.current && v.muted) { v.muted = false; if (visible.current) play(); setBlocked(false); }
       ["pointerdown", "keydown", "touchend"].forEach((t) => removeEventListener(t, unlock));
@@ -63,12 +73,14 @@ export default function Hero() {
     ["pointerdown", "keydown", "touchend"].forEach((t) => addEventListener(t, unlock, { passive: true }));
     const vis = () => { if (document.hidden) v.pause(); else if (visible.current) play(); };
     document.addEventListener("visibilitychange", vis);
-    return () => { io.disconnect(); document.removeEventListener("visibilitychange", vis);
+    return () => { io.disconnect(); document.removeEventListener("visibilitychange", vis); v.removeEventListener("ended", ended);
       ["pointerdown", "keydown", "touchend"].forEach((t) => removeEventListener(t, unlock)); };
   }, [play]);
 
+  // the round button: sound on/off while playing; after the intro has finished it replays it once on request
   const toggle = () => {
     const v = vid.current; if (!v) return;
+    if (done.current) { done.current = false; wantSound.current = true; v.currentTime = 0; v.muted = false; setBlocked(false); play(); return; }
     if (v.muted || blocked) { wantSound.current = true; v.muted = false; setOn(true); setBlocked(false); play(); }
     else { wantSound.current = false; v.muted = true; setOn(false); setBlocked(false); }
   };
@@ -78,8 +90,8 @@ export default function Hero() {
       <style>{css}</style>
       <div className="hero-ghost" aria-hidden="true">{PROFILE.firstName.toUpperCase()}</div>
       <div className="hero-stage">
-        <video ref={vid} className="hero-video" muted loop playsInline preload="auto"
-          aria-label={`${PROFILE.name} introducing herself (looping video)`}>
+        <video ref={vid} className="hero-video" muted playsInline preload="auto"
+          aria-label={`${PROFILE.name} introducing herself (plays once)`}>
           <source src="/hero/hero.webm" type="video/webm" />
           <source src="/hero/hero.mp4" type="video/mp4" />
         </video>
@@ -90,11 +102,11 @@ export default function Hero() {
         <div className="hero-ctas rv is-in" style={{ animation: "up 1.1s .25s var(--ease) both" }}>
           <a className="btn btn-primary" href="#work" onClick={(e) => { e.preventDefault(); scrollToTarget("work"); }}>Explore work</a>
           <a className="btn btn-ghost" href="#contact" onClick={(e) => { e.preventDefault(); scrollToTarget("contact"); }}>Let&apos;s talk</a>
-          <a className="btn btn-ghost" href={PROFILE.resume} download>Résumé ↓</a>
+          <a className="btn btn-ghost" href={PROFILE.resume} download>Resume ↓</a>
         </div>
       </div>
       <div className="hero-side">
-        <button data-snd className={`snd${blocked ? " blocked" : ""}`} onClick={toggle} aria-label={on ? "Mute intro voice" : "Play intro with sound"} aria-pressed={on}>
+        <button data-snd className={`snd${blocked ? " blocked" : ""}`} onClick={toggle} aria-label={on ? "Mute intro voice" : "Play intro with sound (replays if finished)"} aria-pressed={on}>
           {on ? <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.4" height="12" rx="1" /><rect x="9.6" y="2" width="3.4" height="12" rx="1" /></svg>
               : <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.2v11.6L13.6 8z" /></svg>}
         </button>
