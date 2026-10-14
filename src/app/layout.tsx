@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { PROFILE } from "@/lib/data";
+// @ts-ignore Next.js resolves global CSS imports at build time.
 import "./globals.css";
 
 const sans = localFont({ src: "../fonts/InterTight-Variable.woff2", variable: "--font-sans", weight: "100 900", display: "swap" });
