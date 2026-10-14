@@ -1,4 +1,4 @@
-import { BADGE, CERTIFICATIONS } from "@/lib/data";
+import { BADGES } from "@/lib/data";
 import SectionHead from "../ui/SectionHead";
 
 const css = `
@@ -27,13 +27,13 @@ export default function Badges() {
       <div className="wrap ce">
         <div className="ce-l">
           <SectionHead id="badge-h" num="04" label="Badges" lead="Always" em="learning." />
-          <p className="ce-cnt rv">{String(BADGE.length).padStart(2, "0")} badges</p>
+          <p className="ce-cnt rv">{String(BADGES.length).padStart(2, "0")} badges</p>
         </div>
         <ol className="cl">
-          {CERTIFICATIONS.map((c, i) => (
-            <li key={c.title} className="cr rv" tabIndex={0} style={{ ["--i" as string]: i }}>
+          {BADGES.map((b, i) => (
+            <li key={b.title} className="cr rv" tabIndex={0} style={{ ["--i" as string]: i }}>
               <span className="i">{String(i + 1).padStart(2, "0")}</span>
-              <div><h3>{c.title}</h3><p>{c.issuer}</p></div>
+              <div><h3>{b.title}</h3><p>{b.issuer}</p></div>
             </li>
           ))}
         </ol>

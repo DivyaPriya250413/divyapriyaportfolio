@@ -7,6 +7,7 @@ import About from "./sections/About";
 import Skills from "./sections/Skills";
 import Work from "./sections/Work";
 import Certifications from "./sections/Certifications";
+import Badges from "./sections/Badges";
 import Experience from "./sections/Experience";
 import Contact from "./sections/Contact";
 
@@ -27,7 +28,7 @@ export default function App() {
       <SmoothScroll /><RevealObserver />
       <Navigation />
       <main>
-        <Hero /><About /><Skills /><Work /><Certifications /><Experience /><Contact />
+        <Hero /><About /><Skills /><Work /><Certifications /><Badges /><Experience /><Contact />
       </main>
     </>
   );
