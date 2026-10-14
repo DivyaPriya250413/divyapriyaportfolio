@@ -99,7 +99,7 @@ export const CERTIFICATIONS = [
 ];
 
 export const BADGES = [
-  { title: "AWS Educate Getting Started with Storage - - Training Badge", issuer: "Amazon Web Services Training and Certification" },
+  { title: "AWS Educate Getting Started with Storage - Training Badge", issuer: "Amazon Web Services Training and Certification" },
   { title: "AWS Cloud Quest: Cloud Practitioner - Training Badge", issuer: "Amazon Web Services Training and Certification" },
 ];
 
