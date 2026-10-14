@@ -14,7 +14,7 @@ export const PROFILE = {
   linkedin: "https://www.linkedin.com/in/divya-priya2026",
   resume: "/resume.pdf",
   resumeSummary:
-    "Aspiring Software Developer with a basic foundation in Java, SQL, HTML, CSS, JavaScript, React, Node.js, and MongoDB. Hands-on experience developing android application and web applications through academic projects and internships. Familiar with application development, debugging, database management, responsive web design, and Git/GitHub. Seeking to apply technical roles and contribute to real world projects.",
+    "Aspiring Software Developer with a basic foundation in Java, Cloud computing,SQL, HTML, CSS, JavaScript, React, Node.js, and MongoDB. Hands-on experience developing android application and web applications through academic projects and internships. Familiar with application development, debugging, database management, responsive web design, and Git/GitHub. Seeking to apply technical roles and contribute to real world projects.",
   degree: "B.Tech Information Technology",
   college: "EGS Pillay Engineering College",
   cgpa: "8.5",
@@ -24,6 +24,7 @@ export const PROFILE = {
 export const NAV = [
   { id: "about", label: "About" },
   { id: "skills", label: "Skills" },
+  { id: "badges", label: "Badges" },
   { id: "work", label: "Work" },
   { id: "experience", label: "Experience" },
   { id: "contact", label: "Contact" },
@@ -40,9 +41,14 @@ export const SKILL_GROUPS: { family: string; skills: { name: string; sym: string
   ] },
   { family: "Backend", skills: [ { name: "Node.js", sym: "No", logo: "nodejs" } ] },
   { family: "Databases", skills: [
-    { name: "SQL", sym: "Sq", logo: "sql" }, { name: "MySQL", sym: "My", logo: "mysql" }, { name: "MongoDB", sym: "Mo", logo: "mongodb" } ] },
-  { family: "Tools", skills: [
-    { name: "Git", sym: "Gi", logo: "git" }, { name: "GitHub", sym: "Gh", logo: "github" },
+    { name: "SQL", sym: "Sq", logo: "sql" }, { name: "MongoDB", sym: "Mo", logo: "mongodb" } ] },
+  //AWS Services: EC2, S3, IAM, Elastic Load Balancing (ELB), CloudFront
+  { family: "Cloud Computing", skills: [ 
+    { name: "AWS", sym: "Aw", logo: "aws" } , { name: "EC2", sym: "EC", logo: "ec2" } , { name: "S3", sym: "S3", logo: "s3" } , { name: "IAM", sym: "IAM", logo: "iam" } , { name: "ELB", sym: "ELB", logo: "elb" } , { name: "CloudFront", sym: "CF", logo: "cloudfront" } ] },
+    //AWS Management Console, PuTTY, PuTTYgen, Linux Bash Shell
+    
+    { family: "Tools", skills: [
+    { name: "Git", sym: "Gi", logo: "git" }, { name: "GitHub", sym: "Gh", logo: "github" }, { name: "AWS Management Console", sym: "Aw", logo: "aws" }, { name: "Linux", sym: "Li", logo: "linux" }, { name: "Putty", sym: "Pu", logo: "putty" }, { name: "PuttyGen", sym: "Pg", logo: "puttygen" }, { name: "Git Bash", sym: "Gb", logo: "gitbash" },
     { name: "VS Code", sym: "Vs", logo: "vscode" }, { name: "Android Studio", sym: "As", logo: "androidstudio" } ] },
   { family: "Design", skills: [ { name: "Figma", sym: "Fi", logo: "figma" }, { name: "Canva", sym: "Ca", logo: "canva" } ] },
   { family: "Concepts", skills: [
@@ -90,6 +96,11 @@ export const CERTIFICATIONS = [
   { title: "Java bootcamp and basic of Java", issuer: "Lets Upgrade" },
   { title: "DBMS part-1, HTML5, CSS3, JavaScript, Networking and Web Technology, and Prompt Engineering", issuer: "Infosys Springboard" },
   { title: "Python 3.x and Java", issuer: "Skill Rack" },
+];
+
+export const BADGES = [
+  { title: "AWS Educate Getting Started with Storage - - Training Badge", issuer: "Amazon Web Services Training and Certification" },
+  { title: "AWS Cloud Quest: Cloud Practitioner - Training Badge", issuer: "Amazon Web Services Training and Certification" },
 ];
 
 export type Stop = { year: string; title: string; place: string; detail: string; kind: "Education" | "Internship" };
